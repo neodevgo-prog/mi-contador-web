@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Palabras Gratuito</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; max-width: 600px; margin: 50px auto; padding: 20px; }
+        h1 { color: #2c3e50; text-align: center; }
+        textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #219653; }
+        .resultados { display: flex; justify-content: space-around; margin-top: 20px; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .dato { text-align: center; font-size: 18px; }
+        .dato span { display: block; font-size: 28px; font-weight: bold; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <h1>Contador de Palabras</h1>
+    <p style="text-align: center; color: #7f8c8d;">Introduce tu texto para analizar la longitud en tiempo real.</p>
+
+    <form method="POST">
+        <textarea name="texto" placeholder="Pega o escribe tu texto aquí...">{{ texto }}</textarea>
+        <button type="submit">Analizar Texto</button>
+    </form>
+
+    <div class="resultados">
+        <div class="dato"><span>{{ palabras }}</span> Palabras</div>
+        <div class="dato"><span>{{ caracteres }}</span> Caracteres</div>
+    </div>
+
+</body>
+</html>
