@@ -3,32 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contador de Palabras Gratuito</title>
+    <title>Analizador de Texto Profesional</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; max-width: 600px; margin: 50px auto; padding: 20px; }
-        h1 { color: #2c3e50; text-align: center; }
-        textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #219653; }
-        .resultados { display: flex; justify-content: space-around; margin-top: 20px; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .dato { text-align: center; font-size: 18px; }
-        .dato span { display: block; font-size: 28px; font-weight: bold; color: #27ae60; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background-color: #f4f7f6; color: #333; }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        .botones-principales { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-analizar { flex: 2; padding: 14px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .btn-analizar:hover { background-color: #219653; }
+        .herramientas-rapidas { background: #eec; padding: 10px; border-radius: 5px; margin-top: 10px; display: flex; justify-content: space-around; gap: 10px; }
+        .btn-util { padding: 8px 12px; background: #7f8c8d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn-util:hover { background: #6c7a7d; }
+        .seccion-resultados { margin-top: 30px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .malla-metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .bloque-dato { background: #f8f9fa; padding: 15px; border-radius: 6px; text-align: center; border-left: 4px solid #27ae60; }
+        .bloque-dato span { display: block; font-size: 24px; font-weight: bold; color: #2c3e50; margin-top: 5px; }
+        .lista-keywords { list-style: none; padding: 0; }
+        .lista-keywords li { background: #eef9f1; padding: 10px 15px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #2ecc71; }
+        .badge { background: #27ae60; color: white; padding: 3px 8px; border-radius: 12px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <h1>Contador de Palabras</h1>
-    <p style="text-align: center; color: #7f8c8d;">Introduce tu texto para analizar la longitud en tiempo real.</p>
+    <h1>Analizador de Texto Inteligente</h1>
+    <p style="text-align: center; color: #7f8c8d; margin-bottom: 30px;">Herramientas avanzadas de edición, métricas profundas y optimización SEO.</p>
 
     <form method="POST">
-        <textarea name="texto" placeholder="Pega o escribe tu texto aquí...">{{ texto }}</textarea>
-        <button type="submit">Analizar Texto</button>
+        <textarea name="texto" placeholder="Pega tu texto aquí...">{{ texto }}</textarea>
+        
+        <!-- Caja de botones rápidos para modificar el texto -->
+        <div class="herramientas-rapidas">
+            <span style="font-weight: bold; align-self: center;">Formato rápido:</span>
+            <button type="submit" name="accion" value="mayusculas" class="btn-util">TODO MAYÚSCULAS</button>
+            <button type="submit" name="accion" value="minusculas" class="btn-util">todo minúsculas</button>
+            <button type="submit" name="accion" value="limpiar_espacios" class="btn-util">Quitar espacios dobles</button>
+        </div>
+
+        <div class="botones-principales">
+            <button type="submit" name="accion" value="analizar" class="btn-analizar">Analizar Contenido Completo</button>
+        </div>
     </form>
 
-    <div class="resultados">
-        <div class="dato"><span>{{ palabras }}</span> Palabras</div>
-        <div class="dato"><span>{{ caracteres }}</span> Caracteres</div>
+    {% if res %}
+    <div class="seccion-resultados">
+        <h2>Resultados del Análisis</h2>
+        
+        <h3>Métricas de Estructura</h3>
+        <div class="malla-metricas">
+            <div class="bloque-dato">Palabras <span>{{ res.total_palabras }}</span></div>
+            <div class="bloque-dato">Sílabas aprox. <span>{{ res.total_silabas }}</span></div>
+            <div class="bloque-dato">Oraciones <span>{{ res.oraciones }}</span></div>
+            <div class="bloque-dato">Párrafos <span>{{ res.parrafos }}</span></div>
+        </div>
+
+        <h3>Calidad e Inteligencia</h3>
+        <div class="malla-metricas">
+            <div class="bloque-dato">Tono del Texto <span>{{ res.tono }}</span></div>
+            <div class="bloque-dato">Tiempo Lectura <span>{{ res.segundos_lectura }} seg</span></div>
+            <div class="bloque-dato">Tiempo Habla <span>{{ res.segundos_habla }} seg</span></div>
+            <div class="bloque-dato">Longitud Palabra <span>{{ res.promedio_longitud }} let.</span></div>
+        </div>
+
+        <h3>Métricas de Conteo de Caracteres</h3>
+        <div class="malla-metricas">
+            <div class="bloque-dato">Con Espacios <span>{{ res.caracteres_con_espacio }}</span></div>
+            <div class="bloque-dato">Sin Espacios <span>{{ res.caracteres_sin_espacio }}</span></div>
+        </div>
+
+        <h3>Densidad de Palabras Clave (Top 3 SEO)</h3>
+        {% if res.palabras_clave %}
+            <ul class="lista-keywords">
+            {% for item in res.palabras_clave %}
+                <li>
+                    <strong>"{{ item.palabra }}"</strong> 
+                    <span>Repetida: {{ item.frecuencia }} veces <span class="badge">Densidad: {{ item.densidad }}%</span></span>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color: #7f8c8d; font-style: italic;">Escribe un texto más largo para calcular la densidad de palabras clave.</p>
+        {% endif %}
     </div>
+    {% endif %}
 
 </body>
 </html>
