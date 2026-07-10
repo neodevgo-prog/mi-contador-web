@@ -22,7 +22,7 @@ def analizar_texto(texto):
 
     # 1. Conteos Básicos
     caracteres_con_espacio = len(texto)
-    caracteres_sin_espacio = len(texto.replace(" ", "").replace("\n", "").replace("\r", ""))
+    caracteres_sin_space = len(texto.replace(" ", "").replace("\n", "").replace("\r", ""))
     oraciones = len([s for s in re.split(r'[.!?]+', texto) if s.strip()])
     parrafos = len([p for p in texto.split('\n') if p.strip()])
 
@@ -45,7 +45,7 @@ def analizar_texto(texto):
     total_letras = sum(len(p) for p in palabras_lista)
     promedio_longitud = round(total_letras / total_palabras, 1)
 
-    # 5. NUEVO: Detector de Tono / Sentimiento
+    # 5. Detector de Tono / Sentimiento
     palabras_minusculas = texto_limpio.split()
     positivas = sum(1 for p in palabras_minusculas if p in PALABRAS_POSITIVAS)
     negativas = sum(1 for p in palabras_minusculas if p in PALABRAS_NEGATIVAS)
@@ -57,16 +57,15 @@ def analizar_texto(texto):
     else:
         tono = "Neutral 😐"
 
-    # 6. NUEVO: Contador de Sílabas Estimado (Regla básica para español)
+    # 6. Contador de Sílabas Estimado
     total_silabas = 0
     for pal in palabras_minusculas:
-        # Contamos grupos de vocales juntas como una aproximación rápida
         silabas_palabra = len(re.findall(r'[aeiouáéíóúü]+', pal))
         total_silabas += silabas_palabra if silabas_palabra > 0 else 1
 
     return {
         "caracteres_con_espacio": caracteres_con_espacio,
-        "caracteres_sin_espacio": caracteres_sin_espacio,
+        "caracteres_sin_espacio": caracteres_sin_space,
         "total_palabras": total_palabras,
         "oraciones": oraciones if oraciones > 0 else 1,
         "parrafos": parrafos if parrafos > 0 else 1,
@@ -87,7 +86,7 @@ def home():
         texto_ingresado = request.form.get("texto", "")
         accion = request.form.get("accion", "")
 
-        # NUEVO: Lógica del Limpiador de Texto rápido
+        # Lógica del Limpiador de Texto rápido
         if accion == "mayusculas":
             texto_ingresado = texto_ingresado.upper()
         elif accion == "minusculas":
