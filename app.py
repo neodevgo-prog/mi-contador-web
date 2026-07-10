@@ -22,7 +22,7 @@ def analizar_texto(texto):
 
     # 1. Conteos Básicos
     caracteres_con_espacio = len(texto)
-    caracteres_sin_space = len(texto.replace(" ", "").replace("\n", "").replace("\r", ""))
+    caracteres_sin_espacio = len(texto.replace(" ", "").replace("\n", "").replace("\r", ""))
     oraciones = len([s for s in re.split(r'[.!?]+', texto) if s.strip()])
     parrafos = len([p for p in texto.split('\n') if p.strip()])
 
@@ -50,7 +50,7 @@ def analizar_texto(texto):
     positivas = sum(1 for p in palabras_minusculas if p in PALABRAS_POSITIVAS)
     negativas = sum(1 for p in palabras_minusculas if p in PALABRAS_NEGATIVAS)
     
-    if positivas > negativas:
+    if positivas > negatives:
         tono = "Positivo 😊"
     elif negativas > positivas:
         tono = "Negativo 😔"
