@@ -288,12 +288,12 @@
         <h3>Densidad de Palabras Clave (Top 3 SEO)</h3>
         {% if res.palabras_clave %}
             <ul class="lista-keywords">
-            {% for item in res.palabras_clave %}
+           {% for item in res.palabras_clave %}
                 <li>
                     <strong>"{{ item.palabra }}"</strong> 
                     <span>Repetida: {{ item.frecuencia }} veces <span class="badge">Densidad: {{ item.densidad }}%</span></span>
                 </li>
-            {% endfor %}
+           {% endfor %}
             </ul>
         {% else %}
             <p style="color: var(--texto-secundario); font-style: italic;">Escribe un texto más largo para calcular la densidad de palabras clave.</p>
