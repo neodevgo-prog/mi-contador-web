@@ -50,7 +50,7 @@ def analizar_texto(texto):
     positivas = sum(1 for p in palabras_minusculas if p in PALABRAS_POSITIVAS)
     negativas = sum(1 for p in palabras_minusculas if p in PALABRAS_NEGATIVAS)
     
-    if positivas > negatives:
+    if positivas > negativas:
         tono = "Positivo 😊"
     elif negativas > positivas:
         tono = "Negativo 😔"
@@ -65,7 +65,7 @@ def analizar_texto(texto):
 
     return {
         "caracteres_con_espacio": caracteres_con_espacio,
-        "caracteres_sin_espacio": caracteres_sin_space,
+        "caracteres_sin_espacio": caracteres_sin_espacio,
         "total_palabras": total_palabras,
         "oraciones": oraciones if oraciones > 0 else 1,
         "parrafos": parrafos if parrafos > 0 else 1,
