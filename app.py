@@ -85,7 +85,7 @@ def home():
 
         resultados = analizar_texto(texto_ingresado)
 
-    return render_template("index.html", texto=texto_ingresado, res=resultados)
+    return render_template("home.html", texto=texto_ingresado, res=resultados)
 
 if __name__ == "__main__":
     app.run(debug=True)
