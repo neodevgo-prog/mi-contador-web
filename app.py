@@ -67,7 +67,7 @@ def analizar_texto(texto):
         "total_silabas": total_silabas
     }
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/inicio", methods=["GET", "POST"])
 def home():
     texto_ingresado = ""
     resultados = None
