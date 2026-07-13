@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
     <!-- Vinculación de estilos (Asegúrate de que tu ruta apunte a tu archivo CSS) -->
-    <link rel="stylesheet" href="{{ url_with_timestamp('static/css/styles.css') if url_with_timestamp else url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
         /* Variables de color Premium Dark */
         :root {
