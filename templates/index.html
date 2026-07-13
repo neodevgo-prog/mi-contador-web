@@ -1,1 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextMind | Analizador de Texto Inteligente</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0f172a; color: #f8fafc; max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { text-align: center; color: #10b981; }
+        textarea { width: 100%; height: 200px; padding: 15px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        .resultados { margin-top: 30px; background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; }
+        .dato { font-size: 1.2rem; margin-bottom: 10px; }
+        .dato span { font-weight: bold; color: #10b981; }
+    </style>
+</head>
+<body>
+    <h1>TextMind</h1>
+    <form method="POST">
+        <textarea name="texto" placeholder="Pega tu texto aquí...">{{ texto }}</textarea>
+        <button type="submit">Analizar Texto</button>
+    </form>
 
+    {% if res %}
+    <div class="resultados">
+        <h2>Resultados del Análisis</h2>
+        <div class="dato">Palabras: <span>{{ res.total_palabras }}</span></div>
+        <div class="dato">Caracteres: <span>{{ res.caracteres_con_espacio }}</span></div>
+        <div class="dato">Tono detectado: <span>{{ res.tono }}</span></div>
+    </div>
+    {% endif %}
+</body>
+</html>
