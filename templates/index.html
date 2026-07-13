@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
-    <!-- Vinculación de estilos (Asegúrate de que tu ruta apunte a tu archivo CSS) -->
+    <!-- Vinculación limpia de estilos compatible con Flask -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
-        /* Variables de color Premium Dark */
         :root {
             --bg-principal: #0f1219;
             --bg-tarjetas: #161b26;
@@ -28,7 +27,6 @@
             box-sizing: border-box;
         }
 
-        /* Contenedor Global de Tres Columnas */
         .dashboard-container {
             display: grid;
             grid-template-columns: 260px 1fr 300px;
@@ -39,8 +37,7 @@
             min-height: 100vh;
         }
 
-        /* --- COLUMNA IZQUIERDA: PANEL DE CONTROL --- */
-        .sidebar-left {
+        .sidebar-left, .sidebar-right {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -80,6 +77,8 @@
             text-align: left;
             font-size: 14px;
             transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .btn-panel:hover {
@@ -99,7 +98,6 @@
             box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
         }
 
-        /* --- COLUMNA CENTRAL: ÁREA TRABAJO ACTUAL --- */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -115,7 +113,6 @@
             font-weight: bold;
         }
 
-        /* Editor de Texto */
         .input-container {
             background: var(--bg-tarjetas);
             border: 1px solid var(--borde);
@@ -152,7 +149,6 @@
             font-size: 15px;
         }
 
-        /* Cuadrícula Homogénea de Tarjetas Métricas */
         .grid-metricas {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -185,13 +181,6 @@
             font-weight: normal;
         }
 
-        /* --- COLUMNA DERECHA: MONETIZACIÓN Y HERRAMIENTAS --- */
-        .sidebar-right {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
         .ad-container {
             background: var(--bg-anuncios);
             border: 1px dashed var(--borde);
@@ -211,7 +200,7 @@
         .ad-box-banner {
             background: #0b0e14;
             color: #3f4756;
-            height: 250px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -222,7 +211,7 @@
         .ad-skyscraper {
             background: #0b0e14;
             color: #3f4756;
-            height: 480px;
+            height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -230,13 +219,12 @@
             border-radius: 6px;
         }
 
-        /* DISEÑO RESPONSIVO */
         @media (max-width: 1200px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
             }
             .sidebar-left, .sidebar-right {
-                display: none; /* Esconde barras laterales en pantallas móviles */
+                display: none;
             }
         }
     </style>
@@ -245,21 +233,18 @@
 
     <div class="dashboard-container">
         
-        <!-- ================= COLUMNA IZQUIERDA ================= -->
+        <!-- COLUMNA IZQUIERDA -->
         <aside class="sidebar-left">
             <div class="brand">TextMind 🧠</div>
-            
             <div class="menu-group">
                 <span class="menu-title">Suscripción</span>
                 <button class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
             </div>
-
             <div class="menu-group">
                 <span class="menu-title">Análisis Principal</span>
                 <button class="btn-panel" onclick="window.location.reload();">📝 Nuevo Análisis</button>
                 <button class="btn-panel">📊 Historial Guardado</button>
             </div>
-
             <div class="menu-group">
                 <span class="menu-title">Desarrolladores</span>
                 <button class="btn-panel">🔑 Solicitar API Key</button>
@@ -267,13 +252,11 @@
             </div>
         </aside>
 
-        <!-- ================= COLUMNA CENTRAL ================= -->
+        <!-- COLUMNA CENTRAL -->
         <main class="main-content">
-            
-            <!-- Bloque del Analizador -->
             <section class="input-container">
                 <form method="POST" action="/">
-                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente e identificar métricas clave..."></textarea>
+                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente..."></textarea>
                     <div class="action-row">
                         <button type="submit" class="btn-analizar">Analizar Texto</button>
                     </div>
@@ -282,7 +265,6 @@
 
             <!-- Bloques de Métricas Dinámicas -->
             {% if res %}
-                
                 <div class="seccion-titulo">Calidad e Inteligencia</div>
                 <div class="grid-metricas">
                     <div class="bloque-dato">
@@ -310,3 +292,21 @@
                         <span class="valor">{{ res.total_palabras }}</span>
                     </div>
                     <div class="bloque-dato">
+                        <span class="label">Caracteres (con espacios)</span>
+                        <span class="valor">{{ res.total_caracteres_con }}</span>
+                    </div>
+                    <div class="bloque-dato">
+                        <span class="label">Caracteres (sin espacios)</span>
+                        <span class="valor">{{ res.total_caracteres_sin }}</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="ad-container">
+                <span class="ad-tag">PUBLICIDAD</span>
+                <div class="ad-box-banner">Espacio publicitario integrado</div>
+            </div>
+        </main>
+
+        <!-- COLUMNA DERECHA -->
+        <aside class="sidebar-right">
