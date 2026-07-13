@@ -3,325 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TextMind | Analizador de Texto Inteligente & Contador SEO</title>
+    <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
+    <!-- Vinculación de estilos (Asegúrate de que tu ruta apunte a tu archivo CSS) -->
+    <link rel="stylesheet" href="{{ url_with_timestamp('static/css/styles.css') if url_with_timestamp else url_for('static', filename='css/styles.css') }}">
     <style>
+        /* Variables de color Premium Dark */
         :root {
-            --bg-principal: #0f172a;
-            --bg-tarjeta: #1e293b;
-            --texto-principal: #f8fafc;
-            --texto-secundario: #94a3b8;
-            --color-primario: #10b981;
-            --color-primario-hover: #059669;
-            --color-borde: #334155;
-            --gradiente: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --bg-principal: #0f1219;
+            --bg-tarjetas: #161b26;
+            --bg-anuncios: #1a1f2c;
+            --texto-principal: #ffffff;
+            --texto-secundario: #a0aec0;
+            --color-premium: #ffb703;
+            --color-accion: #2ec4b6;
+            --borde: #2d3748;
         }
 
-        @keyframes desplegar {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulso {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            max-width: 900px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
-            background-color: var(--bg-principal); 
+        body {
+            background-color: var(--bg-principal);
             color: var(--texto-principal);
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .cabecera {
-            text-align: center;
-            margin-bottom: 30px;
+        /* Contenedor Global de Tres Columnas */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            gap: 25px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 25px;
+            min-height: 100vh;
         }
 
-        .cabecera h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--gradiente);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        /* --- COLUMNA IZQUIERDA: PANEL DE CONTROL --- */
+        .sidebar-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .cabecera p {
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--borde);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-title {
+            font-size: 12px;
             color: var(--texto-secundario);
-            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
 
-        .contenedor-anuncio {
-            background: #111827;
-            border: 1px dashed #4b5563;
+        .btn-panel {
+            background: var(--bg-tarjetas);
+            color: var(--texto-principal);
+            border: 1px solid var(--borde);
+            padding: 12px 15px;
             border-radius: 8px;
-            padding: 15px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-panel:hover {
+            background: var(--borde);
+            border-color: var(--texto-secundario);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+            color: #000;
+            font-weight: bold;
+            border: none;
+        }
+
+        .btn-premium:hover {
+            background: linear-gradient(135deg, #fb8500 0%, #ffb703 100%);
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
+        }
+
+        /* --- COLUMNA CENTRAL: ÁREA TRABAJO ACTUAL --- */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .seccion-titulo {
+            font-size: 14px;
+            color: var(--color-accion);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 15px 0 10px 0;
+            font-weight: bold;
+        }
+
+        /* Editor de Texto */
+        .input-container {
+            background: var(--bg-tarjetas);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .textarea-premium {
+            width: 100%;
+            height: 180px;
+            background: transparent;
+            border: none;
+            color: var(--texto-principal);
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+
+        .btn-analizar {
+            background: var(--color-accion);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        /* Cuadrícula Homogénea de Tarjetas Métricas */
+        .grid-metricas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .bloque-dato {
+            background: var(--bg-tarjetas);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bloque-dato .label {
+            font-size: 13px;
+            color: var(--texto-secundario);
+        }
+
+        .bloque-dato .valor {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .bloque-dato .unidad {
+            font-size: 16px;
+            color: var(--texto-secundario);
+            font-weight: normal;
+        }
+
+        /* --- COLUMNA DERECHA: MONETIZACIÓN Y HERRAMIENTAS --- */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .ad-container {
+            background: var(--bg-anuncios);
+            border: 1px dashed var(--borde);
+            border-radius: 10px;
+            padding: 12px;
             text-align: center;
-            color: #4b5563;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            margin: 25px 0;
-            min-height: 90px;
+        }
+
+        .ad-tag {
+            font-size: 10px;
+            color: var(--texto-secundario);
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .ad-box-banner {
+            background: #0b0e14;
+            color: #3f4756;
+            height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 13px;
+            border-radius: 6px;
         }
 
-        textarea { 
-            width: 100%; 
-            height: 220px; 
-            padding: 16px; 
-            background-color: var(--bg-tarjeta);
-            color: var(--texto-principal);
-            border: 2px solid var(--color-borde); 
-            border-radius: 12px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            resize: vertical;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--color-primario);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
-        }
-
-        .herramientas-rapidas { 
-            background: #1e293b; 
-            padding: 12px 20px; 
-            border-radius: 12px; 
-            margin-top: 15px; 
-            display: flex; 
-            justify-content: flex-start; 
+        .ad-skyscraper {
+            background: #0b0e14;
+            color: #3f4756;
+            height: 480px;
+            display: flex;
             align-items: center;
-            gap: 12px; 
-            border: 1px solid var(--color-borde);
-            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 13px;
+            border-radius: 6px;
         }
 
-        .herramientas-rapidas span {
-            font-size: 0.9rem;
-            color: var(--texto-secundario);
-            font-weight: 600;
-        }
-
-        .btn-util { 
-            padding: 8px 16px; 
-            background: #334155; 
-            color: var(--texto-principal); 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
-            font-weight: 600;
-            transition: background 0.2s ease, transform 0.1s ease;
-        }
-
-        .btn-util:hover { 
-            background: #475569; 
-            transform: translateY(-1px);
-        }
-
-        .btn-analizar { 
-            width: 100%; 
-            padding: 16px; 
-            background: var(--gradiente);
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            font-weight: 700; 
-            margin-top: 15px;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            animation: pulso 2s infinite;
-        }
-
-        .btn-analizar:hover { 
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
-
-        .seccion-resultados { 
-            margin-top: 40px; 
-            background: var(--bg-tarjeta); 
-            padding: 30px; 
-            border-radius: 16px; 
-            border: 1px solid var(--color-borde);
-            animation: desplegar 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .seccion-resultados h2 { 
-            color: var(--texto-principal); 
-            font-size: 1.6rem;
-            margin-bottom: 25px;
-            font-weight: 700;
-            border-bottom: 2px solid var(--color-borde);
-            padding-bottom: 10px;
-        }
-
-        .seccion-resultados h3 {
-            font-size: 1.1rem;
-            color: var(--color-primario);
-            margin-top: 20px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .malla-metricas { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 16px; 
-            margin-bottom: 25px; 
-        }
-
-        .bloque-dato { 
-            background: #0f172a; 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center; 
-            border: 1px solid var(--color-borde);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .bloque-dato:hover {
-            transform: scale(1.03);
-            border-color: var(--color-primario);
-        }
-
-        .bloque-dato span { 
-            display: block; 
-            font-size: 1.8rem; 
-            font-weight: 800; 
-            color: var(--texto-principal); 
-            margin-top: 5px; 
-        }
-
-        .lista-keywords { 
-            list-style: none; 
-            padding: 0; 
-        }
-
-        .lista-keywords li { 
-            background: #0f172a; 
-            padding: 14px 20px; 
-            margin-bottom: 10px; 
-            border-radius: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid var(--color-borde);
-            transition: transform 0.2s ease;
-        }
-
-        .lista-keywords li:hover {
-            transform: translateX(5px);
-            border-left: 4px solid #3b82f6;
-        }
-
-        .badge { 
-            background: var(--color-primario); 
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-size: 0.85rem; 
-            font-weight: 700;
-            margin-left: 10px;
-        }
-
-        .seccion-seo {
-            margin-top: 50px;
-            background: #1e293b;
-            padding: 35px;
-            border-radius: 16px;
-            border: 1px solid var(--color-borde);
-        }
-
-        .seccion-seo h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 20px;
-        }
-
-        .seccion-seo h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--color-primario);
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-
-        .seccion-seo p {
-            color: var(--texto-secundario);
-            font-size: 1rem;
-            margin-bottom: 15px;
+        /* DISEÑO RESPONSIVO */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-left, .sidebar-right {
+                display: none; /* Esconde barras laterales en pantallas móviles */
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="cabecera">
-        <h1>TextMind</h1>
-        <p>Analizador de Texto Inteligente, Métricas de Lectura y Optimización SEO</p>
-    </div>
-
-    <div class="contenedor-anuncio">
-        [ ESPACIO PUBLICITARIO RESERVADO PARA GOOGLE ADSENSE ]
-    </div>
-
-    <form method="POST">
-        <textarea name="texto" placeholder="Pega tu artículo, ensayo o contenido aquí para comenzar el análisis inteligente...">{{ texto }}</textarea>
+    <div class="dashboard-container">
         
-        <div class="herramientas-rapidas">
-            <span>Formato rápido:</span>
-            <button type="submit" name="accion" value="mayusculas" class="btn-util">TODO MAYÚSCULAS</button>
-            <button type="submit" name="accion" value="minusculas" class="btn-util">todo minúsculas</button>
-            <button type="submit" name="accion" value="limpiar_espacios" class="btn-util">Corregir Espacios Dobles</button>
-        </div>
+        <!-- ================= COLUMNA IZQUIERDA ================= -->
+        <aside class="sidebar-left">
+            <div class="brand">TextMind 🧠</div>
+            
+            <div class="menu-group">
+                <span class="menu-title">Suscripción</span>
+                <button class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
+            </div>
 
-        <button type="submit" name="accion" value="analizar" class="btn-analizar">Analizar Contenido Completo</button>
-    </form>
+            <div class="menu-group">
+                <span class="menu-title">Análisis Principal</span>
+                <button class="btn-panel" onclick="window.location.reload();">📝 Nuevo Análisis</button>
+                <button class="btn-panel">📊 Historial Guardado</button>
+            </div>
 
-   {% if res %}
-<div class="contenedor-flex-o-grid">
-    <!-- Tarjeta: Tono del Texto -->
-    <!-- Tarjeta: Tiempo Lectura -->
-    <!-- Tarjeta: Tiempo Habla -->
-    <div class="bloque-dato">
-        Longitud Palabra <span>{{ res.promedio_longitud }} let.</span>
-    </div>
-</div>
-{% endif %}
+            <div class="menu-group">
+                <span class="menu-title">Desarrolladores</span>
+                <button class="btn-panel">🔑 Solicitar API Key</button>
+                <button class="btn-panel">📚 Documentación</button>
+            </div>
+        </aside>
 
+        <!-- ================= COLUMNA CENTRAL ================= -->
+        <main class="main-content">
+            
+            <!-- Bloque del Analizador -->
+            <section class="input-container">
+                <form method="POST" action="/">
+                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente e identificar métricas clave..."></textarea>
+                    <div class="action-row">
+                        <button type="submit" class="btn-analizar">Analizar Texto</button>
+                    </div>
+                </form>
+            </section>
 
-    <div class="seccion-resultados">
-        <h2>Resultados del Análisis</h2>
-        
-        <h3>Métricas de Estructura</h3>
-        <div class="malla-metricas">
-            <div class="bloque-dato">Palabras <span>{{ res.total_palabras }}</span></div>
-            <div class="bloque-dato">Sílabas aprox. <span>{{ res.total_silabas }}</span></div>
-            <div class="bloque-dato">Oraciones / Frases <span>{{ res.oraciones }}</span></div>
-            <div class="bloque-dato">Párrafos <span>{{ res.parrafos }}</span></div>
-        </div>
+            <!-- Bloques de Métricas Dinámicas -->
+            {% if res %}
+                
+                <div class="seccion-titulo">Calidad e Inteligencia</div>
+                <div class="grid-metricas">
+                    <div class="bloque-dato">
+                        <span class="label">Tono del Texto</span>
+                        <span class="valor">{{ res.tono }}</span>
+                    </div>
+                    <div class="bloque-dato">
+                        <span class="label">Tiempo Lectura</span>
+                        <span class="valor">{{ res.tiempo_lectura }} <span class="unidad">seg</span></span>
+                    </div>
+                    <div class="bloque-dato">
+                        <span class="label">Tiempo Habla</span>
+                        <span class="valor">{{ res.tiempo_habla }} <span class="unidad">seg</span></span>
+                    </div>
+                    <div class="bloque-dato">
+                        <span class="label">Longitud Palabra</span>
+                        <span class="valor">{{ res.promedio_longitud }} <span class="unidad">let.</span></span>
+                    </div>
+                </div>
 
-        <h3>Calidad e Inteligencia</h3>
-        <div class="malla-metricas">
-            <div class="bloque-dato">Tono del Texto <span>{{ res.tono }}</span></div>
-            <div class="bloque-dato">Tiempo Lectura <span>{{ res.segundos_lectura }} seg</span></div>
-            <div class="bloque-dato">Tiempo Habla <span>{{ res.segundos_habla }} seg</span></div>
-            <div class="bloque-dato">Longitud Palabra <span>{{ res.promedio_longitud }} let.</span></div>
-        </div>
-
-        <h3>Métricas de Caracteres</h3>
-        <div class="malla-metricas">
+                <div class="seccion-titulo">Métricas de Caracteres</div>
+                <div class="grid-metricas">
+                    <div class="bloque-dato">
+                        <span class="label">Total Palabras</span>
+                        <span class="valor">{{ res.total_palabras }}</span>
+                    </div>
+                    <div class="bloque-dato">
