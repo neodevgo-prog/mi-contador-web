@@ -233,30 +233,56 @@
 
     <div class="dashboard-container">
         
-        <!-- COLUMNA IZQUIERDA -->
+        <!-- ================= COLUMNA IZQUIERDA ================= -->
         <aside class="sidebar-left">
             <div class="brand">TextMind 🧠</div>
+            
             <div class="menu-group">
                 <span class="menu-title">Suscripción</span>
-                <button class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
+                <a href="{{ url_for('premium') }}" style="text-decoration: none;">
+                    <button class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
+                </a>
             </div>
+
             <div class="menu-group">
                 <span class="menu-title">Análisis Principal</span>
-                <button class="btn-panel" onclick="window.location.reload();">📝 Nuevo Análisis</button>
-                <button class="btn-panel">📊 Historial Guardado</button>
+                <a href="{{ url_for('index') }}" style="text-decoration: none;">
+                    <button class="btn-panel">📝 Nuevo Análisis / Limpiar</button>
+                </a>
+                <a href="{{ url_for('info_paginas', tipo='historial') }}" style="text-decoration: none;">
+                    <button class="btn-panel">📊 Historial Guardado</button>
+                </a>
             </div>
+
             <div class="menu-group">
                 <span class="menu-title">Desarrolladores</span>
-                <button class="btn-panel">🔑 Solicitar API Key</button>
-                <button class="btn-panel">📚 Documentación</button>
+                <a href="{{ url_for('api_key') }}" style="text-decoration: none;">
+                    <button class="btn-panel">🔑 Solicitar API Key</button>
+                </a>
+                <a href="{{ url_for('info_paginas', tipo='docs') }}" style="text-decoration: none;">
+                    <button class="btn-panel">📚 Documentación</button>
+                </a>
             </div>
         </aside>
 
-        <!-- COLUMNA CENTRAL -->
+        <!-- ================= COLUMNA CENTRAL ================= -->
         <main class="main-content">
+
+            <!-- Mensajes Informativos Flotantes (Alertas del Sistema) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for categoria, mensaje in messages %}
+                        <div style="background: var(--bg-tarjetas); border-left: 4px solid {% if categoria == 'premium' %}var(--color-premium){% else %}var(--color-accion){% endif %}; padding: 15px; border-radius: 6px; font-size: 14px; margin-bottom: 5px;">
+                            {{ mensaje }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Caja del Editor de Texto -->
             <section class="input-container">
                 <form method="POST" action="/">
-                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente..."></textarea>
+                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente...">{{ texto_previo }}</textarea>
                     <div class="action-row">
                         <button type="submit" class="btn-analizar">Analizar Texto</button>
                     </div>
@@ -280,33 +306,3 @@
                         <span class="valor">{{ res.tiempo_habla }} <span class="unidad">seg</span></span>
                     </div>
                     <div class="bloque-dato">
-                        <span class="label">Longitud Palabra</span>
-                        <span class="valor">{{ res.promedio_longitud }} <span class="unidad">let.</span></span>
-                    </div>
-                </div>
-
-                <div class="seccion-titulo">Métricas de Caracteres</div>
-                <div class="grid-metricas">
-                    <div class="bloque-dato">
-                        <span class="label">Total Palabras</span>
-                        <span class="valor">{{ res.total_palabras }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Caracteres (con espacios)</span>
-                        <span class="valor">{{ res.total_caracteres_con }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Caracteres (sin espacios)</span>
-                        <span class="valor">{{ res.total_caracteres_sin }}</span>
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="ad-container">
-                <span class="ad-tag">PUBLICIDAD</span>
-                <div class="ad-box-banner">Espacio publicitario integrado</div>
-            </div>
-        </main>
-
-        <!-- COLUMNA DERECHA -->
-        <aside class="sidebar-right">
