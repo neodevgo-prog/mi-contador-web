@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
-# Necesario para usar el sistema de mensajes flash en simulaciones
+# Clave necesaria para que funcione el sistema de alertas (flash) sin dar error
 app.secret_key = os.environ.get("SECRET_KEY", "textmind_secret_premium_key_123")
 
 def analizar_texto_inteligente(texto):
@@ -39,7 +39,7 @@ def analizar_texto_inteligente(texto):
         "tono": tono
     }
 
-# RUTA 1: Vista Principal y Procesamiento
+# RUTA 1: Vista Principal
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultados = None
@@ -50,19 +50,19 @@ def index():
         
     return render_template("index.html", res=resultados, texto_previo=texto_ingresado)
 
-# RUTA 2: Simulación de Suscripción Premium
+# RUTA 2: Botón Premium
 @app.route("/premium")
 def premium():
     flash("¡Gracias por tu interés! El sistema de pagos (Stripe/PayPal) se activará en la Fase 2.", "premium")
     return redirect(url_for("index"))
 
-# RUTA 3: Solicitar API Key para Desarrolladores
+# RUTA 3: Botón API Key
 @app.route("/api-key")
 def api_key():
     flash("Tu solicitud de API Key ha sido registrada. Recibirás un correo con tus credenciales pronto.", "api")
     return redirect(url_for("index"))
 
-# RUTA 4: Documentación e Historial Simulado
+# RUTA 4: Botones de Documentación e Historial
 @app.route("/info/<tipo>")
 def info_paginas(tipo):
     if tipo == "docs":
