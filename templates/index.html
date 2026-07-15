@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
-    <!-- Vinculación limpia de estilos compatible con Flask -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
         :root {
@@ -233,7 +232,7 @@
 
     <div class="dashboard-container">
         
-        <!-- ================= COLUMNA IZQUIERDA ================= -->
+        <!-- COLUMNA IZQUIERDA -->
         <aside class="sidebar-left">
             <div class="brand">TextMind 🧠</div>
             
@@ -265,21 +264,25 @@
             </div>
         </aside>
 
-        <!-- ================= COLUMNA CENTRAL ================= -->
+        <!-- COLUMNA CENTRAL -->
         <main class="main-content">
 
-            <!-- Mensajes Informativos Flotantes (Alertas del Sistema) -->
+            <!-- Alertas del Sistema (Multilínea Protegido) -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for categoria, mensaje in messages %}
-                        <div style="background: var(--bg-tarjetas); border-left: 4px solid {% if categoria == 'premium' %}var(--color-premium){% else %}var(--color-accion){% endif %}; padding: 15px; border-radius: 6px; font-size: 14px; margin-bottom: 5px;">
+                        <div style="background: var(--bg-tarjetas); 
+                                    padding: 15px; 
+                                    border-radius: 6px; 
+                                    font-size: 14px; 
+                                    margin-bottom: 15px;
+                                    border-left: 4px solid {% if categoria == 'premium' %}var(--color-premium){% else %}var(--color-accion){% endif %};">
                             {{ mensaje }}
                         </div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
 
-            <!-- Caja del Editor de Texto -->
             <section class="input-container">
                 <form method="POST" action="/">
                     <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente...">{{ texto_previo }}</textarea>
@@ -289,7 +292,6 @@
                 </form>
             </section>
 
-            <!-- Bloques de Métricas Dinámicas -->
             {% if res %}
                 <div class="seccion-titulo">Calidad e Inteligencia</div>
                 <div class="grid-metricas">
@@ -306,3 +308,4 @@
                         <span class="valor">{{ res.tiempo_habla }} <span class="unidad">seg</span></span>
                     </div>
                     <div class="bloque-dato">
+                        <span class="label">Longitud Palabra</span>
