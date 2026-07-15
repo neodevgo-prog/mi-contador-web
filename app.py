@@ -2,8 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
-# Clave necesaria para que funcione el sistema de alertas (flash) sin dar error
-app.secret_key = os.environ.get("SECRET_KEY", "textmind_secret_premium_key_123")
+# Clave de seguridad estricta para evitar errores 500 con las alertas flash en Render
+app.secret_key = os.environ.get("SECRET_KEY", "textmind_secure_production_key_2026_seo")
 
 def analizar_texto_inteligente(texto):
     """Calcula métricas de texto y SEO para el informe premium."""
@@ -39,7 +39,7 @@ def analizar_texto_inteligente(texto):
         "tono": tono
     }
 
-# RUTA 1: Vista Principal
+# RUTA MAIN
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultados = None
@@ -50,25 +50,29 @@ def index():
         
     return render_template("index.html", res=resultados, texto_previo=texto_ingresado)
 
-# RUTA 2: Botón Premium
+# RUTA PREMIUM
 @app.route("/premium")
 def premium():
     flash("¡Gracias por tu interés! El sistema de pagos (Stripe/PayPal) se activará en la Fase 2.", "premium")
     return redirect(url_for("index"))
 
-# RUTA 3: Botón API Key
+# RUTA API KEY
 @app.route("/api-key")
 def api_key():
     flash("Tu solicitud de API Key ha sido registrada. Recibirás un correo con tus credenciales pronto.", "api")
     return redirect(url_for("index"))
 
-# RUTA 4: Botones de Documentación e Historial
+# RUTA HERRAMIENTAS EXTRAS (PDF, DENSIDAD, DOCS, HISTORIAL)
 @app.route("/info/<tipo>")
 def info_paginas(tipo):
     if tipo == "docs":
         flash("Manual de TextMind v1.0: Pega texto en la caja central y pulsa Analizar para obtener métricas SEO en tiempo real.", "info")
     elif tipo == "historial":
         flash("Historial: Como usuario gratuito, solo almacenamos tu último análisis en la sesión local.", "info")
+    elif tipo == "pdf":
+        flash("Feature Premium: La generación de archivos PDF reales requiere la activación de una suscripción.", "premium")
+    elif tipo == "densidad":
+        flash("Análisis de Densidad: Función en desarrollo para la siguiente actualización.", "info")
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
