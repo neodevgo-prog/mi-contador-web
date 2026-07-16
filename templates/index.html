@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://googletagmanager.com"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1Q5FK3FV6S');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
@@ -218,6 +228,20 @@
             border-radius: 6px;
         }
 
+        .alert-box {
+            background: var(--bg-tarjetas); 
+            padding: 15px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            margin-bottom: 15px;
+        }
+        .alert-premium {
+            border-left: 4px solid var(--color-premium);
+        }
+        .alert-accion {
+            border-left: 4px solid var(--color-accion);
+        }
+
         @media (max-width: 1200px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
@@ -225,17 +249,6 @@
             .sidebar-left, .sidebar-right {
                 display: none;
             }
-        }
-        .flash {
-            background: var(--bg-tarjetas);
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--color-accion);
-        }
-        .flash.premium {
-            border-left-color: var(--color-premium);
         }
     </style>
 </head>
@@ -278,11 +291,10 @@
         <!-- COLUMNA CENTRAL -->
         <main class="main-content">
 
-            <!-- Alertas del Sistema (Multilínea Protegido) -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for categoria, mensaje in messages %}
-                        <div class="flash {% if categoria == 'premium' %}premium{% endif %}">
+                        <div class="alert-box {% if categoria == 'premium' %}alert-premium{% else %}alert-accion{% endif %}">
                             {{ mensaje }}
                         </div>
                     {% endfor %}
@@ -310,50 +322,3 @@
                         <span class="valor">{{ res.tiempo_lectura }} <span class="unidad">seg</span></span>
                     </div>
                     <div class="bloque-dato">
-                        <span class="label">Tiempo Habla</span>
-                        <span class="valor">{{ res.tiempo_habla }} <span class="unidad">seg</span></span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Longitud Palabra</span>
-                        <span class="valor">{{ res.promedio_longitud }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Total Palabras</span>
-                        <span class="valor">{{ res.total_palabras }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Caracteres (con espacios)</span>
-                        <span class="valor">{{ res.total_caracteres_con }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Caracteres (sin espacios)</span>
-                        <span class="valor">{{ res.total_caracteres_sin }}</span>
-                    </div>
-                </div>
-
-            {% endif %}
-
-        </main>
-
-        <!-- COLUMNA DERECHA -->
-        <aside class="sidebar-right">
-            <div class="ad-container">
-                <span class="ad-tag">Patrocinado</span>
-                <div class="ad-box-banner">Espacio publicitario / Información Premium</div>
-            </div>
-
-            <div class="ad-container">
-                <span class="ad-tag">Sugerencias</span>
-                <div style="font-size:13px;color:var(--texto-secundario);">Mejora tus títulos incluyendo la palabra clave objetivo y mantén párrafos de 20-40 palabras.</div>
-            </div>
-
-            <div class="ad-container">
-                <span class="ad-tag">Contacto</span>
-                <div style="font-size:13px;color:var(--texto-secundario);">¿Necesitas funciones avanzadas? Solicita la versión Premium.</div>
-            </div>
-        </aside>
-
-    </div>
-
-</body>
-</html>
