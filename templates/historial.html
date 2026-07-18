@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - TextMind 🧠</title>
+    <style>
+        :root {
+            --bg-principal: #0f1219;
+            --bg-tarjetas: #161b26;
+            --texto-principal: #ffffff;
+            --texto-secundario: #a0aec0;
+            --color-accion: #2ec4b6;
+            --borde: #2d3748;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 25px;
+        }
+        .contenedor {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .volver {
+            color: var(--color-accion);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        h1 {
+            font-size: 22px;
+        }
+        .entrada {
+            background: var(--bg-tarjetas);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+        }
+        .entrada .fecha {
+            font-size: 12px;
+            color: var(--texto-secundario);
+        }
+        .entrada .resumen {
+            margin: 6px 0;
+            font-size: 15px;
+        }
+        .entrada .meta {
+            font-size: 13px;
+            color: var(--color-accion);
+        }
+        .vacio {
+            color: var(--texto-secundario);
+            font-size: 14px;
+            padding: 20px;
+            border: 1px dashed var(--borde);
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <a href="{{ url_for('index') }}" class="volver">← Volver al analizador</a>
+        <h1>📊 Historial de análisis</h1>
+        <p style="color: var(--texto-secundario); font-size: 13px;">
+            Se guardan tus últimos 5 análisis mientras dure tu sesión en este navegador.
+        </p>
 
+        {% if historial %}
+            {% for entrada in historial %}
+            <div class="entrada">
+                <span class="fecha">{{ entrada.fecha }}</span>
+                <p class="resumen">"{{ entrada.resumen }}"</p>
+                <span class="meta">{{ entrada.palabras }} palabras · {{ entrada.tono }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="vacio">Todavía no has analizado ningún texto en esta sesión.</div>
+        {% endif %}
+    </div>
+</body>
+</html>
