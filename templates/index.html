@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://googletagmanager.com"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q5FK3FV6S"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -12,6 +12,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TextMind: analizador de texto inteligente con métricas de lectura, tono y SEO en tiempo real.">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
     <style>
         :root {
@@ -25,13 +26,16 @@
             --borde: #2d3748;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--bg-principal);
             color: var(--texto-principal);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         .dashboard-container {
@@ -83,14 +87,14 @@
             cursor: pointer;
             text-align: left;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
-            box-sizing: border-box;
         }
 
         .btn-panel:hover {
             background: var(--borde);
             border-color: var(--texto-secundario);
+            transform: translateY(-1px);
         }
 
         .btn-premium {
@@ -134,15 +138,23 @@
             border: none;
             color: var(--texto-principal);
             font-size: 16px;
-            resize: none;
+            font-family: inherit;
+            resize: vertical;
             outline: none;
-            box-sizing: border-box;
         }
 
         .action-row {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .contador-vivo {
+            font-size: 13px;
+            color: var(--texto-secundario);
         }
 
         .btn-analizar {
@@ -154,6 +166,16 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 15px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-analizar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-analizar:not(:disabled):hover {
+            opacity: 0.9;
         }
 
         .grid-metricas {
@@ -188,6 +210,35 @@
             font-weight: normal;
         }
 
+        .estado-vacio {
+            color: var(--texto-secundario);
+            font-size: 14px;
+            padding: 15px 20px;
+            background: var(--bg-tarjetas);
+            border: 1px dashed var(--borde);
+            border-radius: 10px;
+        }
+
+        .info-card {
+            background: var(--bg-tarjetas);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .info-card h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: var(--color-accion);
+        }
+
+        .info-card p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--texto-secundario);
+            line-height: 1.5;
+        }
+
         .ad-container {
             background: var(--bg-anuncios);
             border: 1px dashed var(--borde);
@@ -215,22 +266,11 @@
             border-radius: 6px;
         }
 
-        .ad-skyscraper {
-            background: #0b0e14;
-            color: #3f4756;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            border-radius: 6px;
-        }
-
         .alert-box {
-            background: var(--bg-tarjetas); 
-            padding: 15px; 
-            border-radius: 6px; 
-            font-size: 14px; 
+            background: var(--bg-tarjetas);
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
             margin-bottom: 15px;
         }
         .alert-premium {
@@ -240,12 +280,48 @@
             border-left: 4px solid var(--color-accion);
         }
 
+        /* ================= RESPONSIVE ================= */
         @media (max-width: 1200px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 15px;
             }
-            .sidebar-left, .sidebar-right {
-                display: none;
+            .sidebar-left {
+                order: 1;
+            }
+            .main-content {
+                order: 2;
+            }
+            .sidebar-right {
+                order: 3;
+            }
+            .sidebar-left .menu-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .sidebar-left .btn-panel {
+                width: auto;
+                flex: 1 1 auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .brand {
+                font-size: 20px;
+            }
+            .textarea-premium {
+                height: 140px;
+                font-size: 15px;
+            }
+            .bloque-dato .valor {
+                font-size: 22px;
+            }
+            .action-row {
+                justify-content: center;
+            }
+            .btn-analizar {
+                width: 100%;
             }
         }
     </style>
@@ -253,35 +329,35 @@
 <body>
 
     <div class="dashboard-container">
-        
+
         <!-- ================= COLUMNA IZQUIERDA ================= -->
         <aside class="sidebar-left">
             <div class="brand">TextMind 🧠</div>
-            
+
             <div class="menu-group">
                 <span class="menu-title">Suscripción</span>
                 <a href="{{ url_for('premium') }}" style="text-decoration: none;">
-                    <button class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
+                    <button type="button" class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
                 </a>
             </div>
 
             <div class="menu-group">
                 <span class="menu-title">Análisis Principal</span>
                 <a href="{{ url_for('index') }}" style="text-decoration: none;">
-                    <button class="btn-panel">📝 Nuevo Análisis / Limpiar</button>
+                    <button type="button" class="btn-panel">📝 Nuevo Análisis / Limpiar</button>
                 </a>
                 <a href="{{ url_for('info_paginas', tipo='historial') }}" style="text-decoration: none;">
-                    <button class="btn-panel">📊 Historial Guardado</button>
+                    <button type="button" class="btn-panel">📊 Historial Guardado</button>
                 </a>
             </div>
 
             <div class="menu-group">
                 <span class="menu-title">Desarrolladores</span>
                 <a href="{{ url_for('api_key') }}" style="text-decoration: none;">
-                    <button class="btn-panel">🔑 Solicitar API Key</button>
+                    <button type="button" class="btn-panel">🔑 Solicitar API Key</button>
                 </a>
                 <a href="{{ url_for('info_paginas', tipo='docs') }}" style="text-decoration: none;">
-                    <button class="btn-panel">📚 Documentación</button>
+                    <button type="button" class="btn-panel">📚 Documentación</button>
                 </a>
             </div>
         </aside>
@@ -293,7 +369,7 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for categoria, mensaje in messages %}
-                        <div class="alert-box {% if categoria == 'premium' %}alert-premium{% else %}alert-accion{% endif %}">
+                        <div class="alert-box {% if categoria == 'premium' %}alert-premium{% else %}alert-accion{% endif %}" role="status">
                             {{ mensaje }}
                         </div>
                     {% endfor %}
@@ -301,20 +377,118 @@
             {% endwith %}
 
             <section class="input-container">
-                <form method="POST" action="/">
-                    <textarea class="textarea-premium" name="texto" placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente...">{{ texto_previo }}</textarea>
+                <form method="POST" action="{{ url_for('index') }}">
+                    <label for="texto" class="visually-hidden" style="display:block; margin-bottom:8px; font-size:13px; color:var(--texto-secundario);">
+                        Pega o escribe el texto que quieres analizar
+                    </label>
+                    <textarea id="texto" class="textarea-premium" name="texto"
+                        placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente...">{{ texto_previo }}</textarea>
                     <div class="action-row">
-                        <button type="submit" class="btn-analizar">Analizar Texto</button>
+                        <span class="contador-vivo" id="contador-vivo">0 palabras · 0 caracteres</span>
+                        <button type="submit" class="btn-analizar" id="btn-analizar" disabled>Analizar Texto</button>
                     </div>
                 </form>
             </section>
 
-            <!-- Bloques de Métricas de Calidad (Visibles siempre, dinámicas si hay datos) -->
+            {% if res %}
             <div class="seccion-titulo">Calidad e Inteligencia</div>
             <div class="grid-metricas">
                 <div class="bloque-dato">
                     <span class="label">Tono del Texto</span>
-                    <span class="valor">{% if res %}{{ res.tono }}{% else %}--{% endif %}</span>
+                    <span class="valor">{{ res.tono }}</span>
                 </div>
                 <div class="bloque-dato">
-                    <span class="label">Tiempo Lectura</span>
+                    <span class="label">Tiempo de Lectura</span>
+                    <span class="valor">{{ res.tiempo_lectura }} <span class="unidad">seg</span></span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Tiempo Hablado</span>
+                    <span class="valor">{{ res.tiempo_habla }} <span class="unidad">seg</span></span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Diversidad Léxica</span>
+                    <span class="valor">{{ res.diversidad_lexica }} <span class="unidad">%</span></span>
+                </div>
+            </div>
+
+            <div class="seccion-titulo">Conteo</div>
+            <div class="grid-metricas">
+                <div class="bloque-dato">
+                    <span class="label">Palabras</span>
+                    <span class="valor">{{ res.total_palabras }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Palabras Únicas</span>
+                    <span class="valor">{{ res.palabras_unicas }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Caracteres (con espacios)</span>
+                    <span class="valor">{{ res.total_caracteres_con }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Caracteres (sin espacios)</span>
+                    <span class="valor">{{ res.total_caracteres_sin }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Frases</span>
+                    <span class="valor">{{ res.total_frases }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Párrafos</span>
+                    <span class="valor">{{ res.total_parrafos }}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Longitud Media de Palabra</span>
+                    <span class="valor">{{ res.promedio_longitud }} <span class="unidad">car.</span></span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Palabra Clave Principal</span>
+                    <span class="valor">{{ res.palabra_clave }} <span class="unidad">×{{ res.palabra_clave_veces }}</span></span>
+                </div>
+            </div>
+            {% else %}
+            <div class="seccion-titulo">Calidad e Inteligencia</div>
+            <div class="estado-vacio">
+                Escribe un texto arriba y pulsa <strong>Analizar Texto</strong> para ver aquí sus métricas de tono, lectura y SEO.
+            </div>
+            {% endif %}
+        </main>
+
+        <!-- ================= COLUMNA DERECHA ================= -->
+        <aside class="sidebar-right">
+            <div class="info-card">
+                <h4>💡 Consejo SEO</h4>
+                <p>Los textos con frases de entre 15 y 20 palabras suelen ser más fáciles de leer y mejor valorados por los buscadores.</p>
+            </div>
+
+            <div class="info-card">
+                <h4>🚀 Próximamente (Premium)</h4>
+                <p>Exportación a PDF, densidad de palabras clave avanzada e historial en la nube con tu cuenta.</p>
+            </div>
+
+            <div class="ad-container">
+                <span class="ad-tag">PUBLICIDAD</span>
+                <div class="ad-box-banner">Espacio de anuncio 300×200</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        const textarea = document.getElementById('texto');
+        const contador = document.getElementById('contador-vivo');
+        const btnAnalizar = document.getElementById('btn-analizar');
+
+        function actualizarContador() {
+            const texto = textarea.value;
+            const palabras = texto.trim().length > 0 ? texto.trim().split(/\s+/).length : 0;
+            const caracteres = texto.length;
+            contador.textContent = palabras + ' palabras · ' + caracteres + ' caracteres';
+            btnAnalizar.disabled = texto.trim().length === 0;
+        }
+
+        textarea.addEventListener('input', actualizarContador);
+        actualizarContador();
+    </script>
+</body>
+</html>
