@@ -62,7 +62,7 @@ def api_key():
     flash("Tu solicitud de API Key ha sido registrada. Recibirás un correo con tus credenciales pronto.", "api")
     return redirect(url_for("index"))
 
-# RUTA HERRAMIENTAS EXTRAS (PDF, DENSIDAD, DOCS, HISTORIAL)
+# RUTA HERRAMIENTAS EXTRAS
 @app.route("/info/<tipo>")
 def info_paginas(tipo):
     if tipo == "docs":
