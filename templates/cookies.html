@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Cookies - TextMind 🧠</title>
+    <style>
+        :root {
+            --bg-principal: #0f1219;
+            --texto-principal: #ffffff;
+            --texto-secundario: #a0aec0;
+            --color-accion: #2ec4b6;
+            --borde: #2d3748;
+        }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 25px;
+            line-height: 1.6;
+        }
+        .contenedor { max-width: 750px; margin: 0 auto; }
+        .volver { color: var(--color-accion); text-decoration: none; font-size: 14px; }
+        h1 { font-size: 22px; }
+        h2 { font-size: 17px; color: var(--color-accion); margin-top: 30px; }
+        p, li { color: var(--texto-secundario); font-size: 14px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--borde);
+            padding: 8px 10px;
+            text-align: left;
+            color: var(--texto-secundario);
+        }
+        th { color: var(--texto-principal); }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <a href="{{ url_for('index') }}" class="volver">← Volver al analizador</a>
+        <h1>Política de Cookies</h1>
 
+        <p>Última actualización: {{ '2026' }}</p>
+
+        <h2>¿Qué cookies usamos?</h2>
+        <table>
+            <tr>
+                <th>Cookie</th>
+                <th>Finalidad</th>
+                <th>Duración</th>
+            </tr>
+            <tr>
+                <td>textmind_cookies (localStorage)</td>
+                <td>Recordar tu elección sobre el aviso de cookies</td>
+                <td>Permanente hasta que la borres</td>
+            </tr>
+            <tr>
+                <td>session (Flask)</td>
+                <td>Mantener tu historial de análisis y tu estado Premium</td>
+                <td>Mientras dure tu sesión de navegador</td>
+            </tr>
+            <tr>
+                <td>_ga / _gid (Google Analytics)</td>
+                <td>Estadísticas anónimas de uso de la web</td>
+                <td>Hasta 2 años (solo si aceptas)</td>
+            </tr>
+        </table>
+
+        <h2>¿Cómo puedo cambiar mi decisión?</h2>
+        <p>
+            Puedes borrar los datos de navegación de tu navegador para que el aviso de
+            cookies vuelva a aparecer y elegir de nuevo.
+        </p>
+    </div>
+</body>
+</html>
