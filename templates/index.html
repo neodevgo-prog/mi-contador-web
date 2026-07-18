@@ -178,6 +178,17 @@
             opacity: 0.9;
         }
 
+        .btn-morfologia {
+            background: transparent;
+            color: var(--color-accion);
+            border: 1px solid var(--color-accion);
+        }
+
+        .btn-morfologia:disabled {
+            border-color: var(--borde);
+            color: var(--texto-secundario);
+        }
+
         .grid-metricas {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -217,6 +228,61 @@
             background: var(--bg-tarjetas);
             border: 1px dashed var(--borde);
             border-radius: 10px;
+        }
+
+        .tabla-container {
+            background: var(--bg-tarjetas);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 5px 20px;
+            overflow-x: auto;
+        }
+
+        table.tabla-morfologia {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table.tabla-morfologia th {
+            text-align: left;
+            color: var(--color-accion);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--borde);
+        }
+
+        table.tabla-morfologia td {
+            padding: 10px;
+            border-bottom: 1px solid var(--borde);
+            vertical-align: top;
+        }
+
+        table.tabla-morfologia tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rasgo-chip {
+            display: inline-block;
+            background: var(--bg-anuncios);
+            border: 1px solid var(--borde);
+            color: var(--texto-secundario);
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin: 2px 4px 2px 0;
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            background: rgba(46, 196, 182, 0.15);
+            color: var(--color-accion);
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 6px;
         }
 
         .info-card {
@@ -385,7 +451,10 @@
                         placeholder="Escribe o pega tu contenido aquí para realizar un escaneo SEO inteligente...">{{ texto_previo }}</textarea>
                     <div class="action-row">
                         <span class="contador-vivo" id="contador-vivo">0 palabras · 0 caracteres</span>
-                        <button type="submit" class="btn-analizar" id="btn-analizar" disabled>Analizar Texto</button>
+                        <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                            <button type="submit" name="accion" value="basico" class="btn-analizar" id="btn-analizar" disabled>Analizar Texto</button>
+                            <button type="submit" name="accion" value="morfologia" class="btn-analizar btn-morfologia" id="btn-morfologia" disabled>🔬 Analizar Morfología</button>
+                        </div>
                     </div>
                 </form>
             </section>
@@ -449,7 +518,40 @@
             {% else %}
             <div class="seccion-titulo">Calidad e Inteligencia</div>
             <div class="estado-vacio">
-                Escribe un texto arriba y pulsa <strong>Analizar Texto</strong> para ver aquí sus métricas de tono, lectura y SEO.
+                Escribe un texto arriba y pulsa <strong>Analizar Texto</strong> para ver aquí sus métricas de tono, lectura y SEO,
+                o <strong>Analizar Morfología</strong> para ver cada palabra clasificada gramaticalmente.
+            </div>
+            {% endif %}
+
+            {% if morfologia %}
+            <div class="seccion-titulo">Análisis Morfológico ({{ morfologia.num_oraciones }} oración{{ 'es' if morfologia.num_oraciones != 1 else '' }})</div>
+            <div class="tabla-container">
+                <table class="tabla-morfologia">
+                    <thead>
+                        <tr>
+                            <th>Palabra</th>
+                            <th>Lema</th>
+                            <th>Categoría</th>
+                            <th>Rasgos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in morfologia.palabras %}
+                        <tr>
+                            <td><strong>{{ item.palabra }}</strong></td>
+                            <td>{{ item.lema }}</td>
+                            <td><span class="categoria-badge">{{ item.categoria }}</span></td>
+                            <td>
+                                {% for clave, valor in item.rasgos.items() %}
+                                    <span class="rasgo-chip">{{ clave }}: {{ valor }}</span>
+                                {% else %}
+                                    <span style="color: var(--texto-secundario); font-size: 12px;">—</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
         </main>
@@ -478,13 +580,16 @@
         const textarea = document.getElementById('texto');
         const contador = document.getElementById('contador-vivo');
         const btnAnalizar = document.getElementById('btn-analizar');
+        const btnMorfologia = document.getElementById('btn-morfologia');
 
         function actualizarContador() {
             const texto = textarea.value;
             const palabras = texto.trim().length > 0 ? texto.trim().split(/\s+/).length : 0;
             const caracteres = texto.length;
             contador.textContent = palabras + ' palabras · ' + caracteres + ' caracteres';
-            btnAnalizar.disabled = texto.trim().length === 0;
+            const vacio = texto.trim().length === 0;
+            btnAnalizar.disabled = vacio;
+            btnMorfologia.disabled = vacio;
         }
 
         textarea.addEventListener('input', actualizarContador);
