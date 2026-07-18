@@ -7,7 +7,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-1Q5FK3FV6S');
     </script>
 
@@ -310,13 +309,12 @@
                 </form>
             </section>
 
-            <!-- Bloques de Métricas Dinámicas -->
-            {% if res %}
-                <div class="seccion-titulo">Calidad e Inteligencia</div>
-                <div class="grid-metricas">
-                    <div class="bloque-dato">
-                        <span class="label">Tono del Texto</span>
-                        <span class="valor">{{ res.tono }}</span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Tiempo Lectura</span>
+            <!-- Bloques de Métricas de Calidad (Visibles siempre, dinámicas si hay datos) -->
+            <div class="seccion-titulo">Calidad e Inteligencia</div>
+            <div class="grid-metricas">
+                <div class="bloque-dato">
+                    <span class="label">Tono del Texto</span>
+                    <span class="valor">{% if res %}{{ res.tono }}{% else %}--{% endif %}</span>
+                </div>
+                <div class="bloque-dato">
+                    <span class="label">Tiempo Lectura</span>
