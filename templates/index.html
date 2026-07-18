@@ -255,7 +255,7 @@
 
     <div class="dashboard-container">
         
-        <!-- COLUMNA IZQUIERDA -->
+        <!-- ================= COLUMNA IZQUIERDA ================= -->
         <aside class="sidebar-left">
             <div class="brand">TextMind 🧠</div>
             
@@ -287,9 +287,10 @@
             </div>
         </aside>
 
-        <!-- COLUMNA CENTRAL -->
+        <!-- ================= COLUMNA CENTRAL ================= -->
         <main class="main-content">
 
+            <!-- Alertas del sistema -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for categoria, mensaje in messages %}
@@ -309,6 +310,7 @@
                 </form>
             </section>
 
+            <!-- Bloques de Métricas Dinámicas -->
             {% if res %}
                 <div class="seccion-titulo">Calidad e Inteligencia</div>
                 <div class="grid-metricas">
@@ -318,7 +320,3 @@
                     </div>
                     <div class="bloque-dato">
                         <span class="label">Tiempo Lectura</span>
-                        <span class="valor">{{ res.tiempo_lectura }} <span class="unidad">seg</span></span>
-                    </div>
-                    <div class="bloque-dato">
-                        <span class="label">Tiempo Habla</span>
