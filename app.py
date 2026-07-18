@@ -6,6 +6,87 @@ app = Flask(__name__)
 # Clave de seguridad estricta para evitar errores 500 con las alertas flash en Render
 app.secret_key = os.environ.get("SECRET_KEY", "textmind_secure_production_key_2026_seo")
 
+# --- Carga del modelo de spaCy para el análisis morfológico ---
+# Se carga UNA sola vez al arrancar el servidor (no en cada petición), porque
+# cargar el modelo tarda unos segundos y consume memoria.
+nlp = None
+try:
+    import spacy
+    nlp = spacy.load("es_core_news_sm")
+except Exception as e:
+    print(f"[TextMind] Aviso: no se pudo cargar el modelo de spaCy ({e}). "
+          f"El análisis morfológico quedará desactivado.")
+
+# Traducciones de las categorías gramaticales (POS) de spaCy al español
+ETIQUETAS_POS = {
+    "NOUN": "Sustantivo", "PROPN": "Nombre Propio", "VERB": "Verbo", "AUX": "Verbo Auxiliar",
+    "ADJ": "Adjetivo", "ADV": "Adverbio", "PRON": "Pronombre", "DET": "Determinante",
+    "ADP": "Preposición", "CCONJ": "Conjunción", "SCONJ": "Conjunción", "NUM": "Número",
+    "INTJ": "Interjección", "SYM": "Símbolo", "X": "Otro",
+}
+
+# Traducciones de los rasgos morfológicos y sus valores, organizadas por rasgo
+# para evitar ambigüedades (p. ej. "Imp" significa "Imperfecto" en Tense pero
+# "Imperativo" en Mood).
+CLAVES_RASGOS = {
+    "Gender": "Género", "Number": "Número", "Tense": "Tiempo", "Mood": "Modo",
+    "Person": "Persona", "VerbForm": "Forma Verbal", "PronType": "Tipo",
+    "Case": "Caso", "Degree": "Grado", "NumType": "Tipo Numeral",
+    "Definite": "Definido", "Polarity": "Polaridad",
+}
+
+VALORES_RASGOS = {
+    "Gender": {"Masc": "Masculino", "Fem": "Femenino"},
+    "Number": {"Sing": "Singular", "Plur": "Plural"},
+    "Tense": {"Pres": "Presente", "Past": "Pasado", "Fut": "Futuro", "Imp": "Imperfecto", "Pqp": "Pluscuamperfecto"},
+    "Mood": {"Ind": "Indicativo", "Sub": "Subjuntivo", "Imp": "Imperativo", "Cnd": "Condicional"},
+    "Person": {"1": "1ª", "2": "2ª", "3": "3ª"},
+    "VerbForm": {"Fin": "Conjugado", "Inf": "Infinitivo", "Ger": "Gerundio", "Part": "Participio"},
+    "PronType": {"Prs": "Personal", "Dem": "Demostrativo", "Ind": "Indefinido", "Int": "Interrogativo",
+                 "Rel": "Relativo", "Art": "Artículo"},
+    "Case": {"Nom": "Nominativo", "Acc": "Acusativo", "Dat": "Dativo"},
+    "Degree": {"Cmp": "Comparativo", "Sup": "Superlativo", "Pos": "Positivo"},
+    "Definite": {"Def": "Definido", "Ind": "Indefinido"},
+}
+
+
+def traducir_rasgos(rasgos):
+    """Convierte los rasgos morfológicos de spaCy (en inglés/código UD) a español legible."""
+    resultado = {}
+    for clave, valor in rasgos.items():
+        clave_es = CLAVES_RASGOS.get(clave, clave)
+        valor_es = VALORES_RASGOS.get(clave, {}).get(valor, valor)
+        resultado[clave_es] = valor_es
+    return resultado
+
+
+def analizar_morfologia(texto):
+    """Analiza cada palabra del texto: categoría gramatical, lema y rasgos morfológicos."""
+    if nlp is None or not texto or not texto.strip():
+        return None
+
+    doc = nlp(texto)
+
+    palabras_analizadas = []
+    for token in doc:
+        if token.pos_ in ("SPACE", "PUNCT"):
+            continue
+        rasgos = traducir_rasgos(token.morph.to_dict())
+        palabras_analizadas.append({
+            "palabra": token.text,
+            "lema": token.lemma_,
+            "categoria": ETIQUETAS_POS.get(token.pos_, token.pos_),
+            "rasgos": rasgos,
+        })
+
+    oraciones = [sent.text.strip() for sent in doc.sents if sent.text.strip()]
+
+    return {
+        "palabras": palabras_analizadas,
+        "num_oraciones": len(oraciones),
+        "oraciones": oraciones,
+    }
+
 
 def analizar_texto_inteligente(texto):
     """Calcula métricas de texto y SEO para el informe premium."""
@@ -75,14 +156,23 @@ def analizar_texto_inteligente(texto):
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultados = None
+    morfologia = None
     texto_ingresado = ""
+
     if request.method == "POST":
         texto_ingresado = request.form.get("texto", "")
+        accion = request.form.get("accion", "basico")
         resultados = analizar_texto_inteligente(texto_ingresado)
-        if resultados is None and texto_ingresado.strip() == "" and request.method == "POST":
-            flash("Escribe algo de texto antes de analizar.", "info")
 
-    return render_template("index.html", res=resultados, texto_previo=texto_ingresado)
+        if resultados is None:
+            flash("Escribe algo de texto antes de analizar.", "info")
+        elif accion == "morfologia":
+            if nlp is None:
+                flash("El análisis morfológico no está disponible ahora mismo. Inténtalo más tarde.", "info")
+            else:
+                morfologia = analizar_morfologia(texto_ingresado)
+
+    return render_template("index.html", res=resultados, texto_previo=texto_ingresado, morfologia=morfologia)
 
 
 # RUTA PREMIUM
