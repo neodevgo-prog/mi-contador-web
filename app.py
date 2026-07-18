@@ -241,8 +241,18 @@ def historial():
 
 
 # RUTA PREMIUM: inicia el pago real con Stripe si está configurado
-@app.route("/premium")
+@app.route("/premium", methods=["GET", "POST"])
 def premium():
+    if request.method == "GET":
+        # Si alguien llega aquí directamente (sin pasar por el formulario con la
+        # casilla de aceptación), lo mandamos de vuelta al inicio.
+        flash("Para activar el Plan Premium, marca la casilla de aceptación y pulsa el botón desde la página principal.", "info")
+        return redirect(url_for("index"))
+
+    if not request.form.get("acepta_renuncia"):
+        flash("Debes aceptar la renuncia al derecho de desistimiento de 14 días para continuar con el pago del contenido digital.", "premium")
+        return redirect(url_for("index"))
+
     if session.get("premium"):
         flash("Ya tienes el Plan Premium activo. ¡Gracias por tu apoyo! 🎉", "premium")
         return redirect(url_for("index"))
@@ -256,6 +266,11 @@ def premium():
                 success_url=DOMINIO + "/premium/exito?session_id={CHECKOUT_SESSION_ID}",
                 cancel_url=DOMINIO + "/premium/cancelado",
             )
+            # Registro mínimo del consentimiento para tener constancia (queda en los
+            # logs de Render). Si más adelante añades base de datos, aquí es donde
+            # guardarías esto de forma permanente junto con el ID de la sesión.
+            print(f"[TextMind] Consentimiento de renuncia aceptado — IP: {request.remote_addr} — "
+                  f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')} — sesión: {checkout_session.id}")
             return redirect(checkout_session.url, code=303)
         except Exception as e:
             print(f"[TextMind] Error creando la sesión de Stripe: {e}")

@@ -315,6 +315,27 @@
             text-align: center;
         }
 
+        .premium-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-legal {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: var(--texto-secundario);
+            cursor: pointer;
+        }
+
+        .checkbox-legal input {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
         .site-footer {
             grid-column: 1 / -1;
             text-align: center;
@@ -501,9 +522,14 @@
                 {% if es_premium %}
                 <div class="badge-premium-activo">✅ Premium Activo</div>
                 {% else %}
-                <a href="{{ url_for('premium') }}" style="text-decoration: none;">
-                    <button type="button" class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
-                </a>
+                <form method="POST" action="{{ url_for('premium') }}" class="premium-form">
+                    <label class="checkbox-legal">
+                        <input type="checkbox" name="acepta_renuncia" required>
+                        <span>He leído y acepto que, al tratarse de contenido digital de entrega inmediata,
+                        renuncio a mi derecho de desistimiento de 14 días una vez completado el pago.</span>
+                    </label>
+                    <button type="submit" class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
+                </form>
                 {% endif %}
             </div>
 
