@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - TextMind 🧠</title>
+    <style>
+        :root {
+            --bg-principal: #0f1219;
+            --texto-principal: #ffffff;
+            --texto-secundario: #a0aec0;
+            --color-accion: #2ec4b6;
+            --borde: #2d3748;
+        }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 25px;
+            line-height: 1.6;
+        }
+        .contenedor {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .volver {
+            color: var(--color-accion);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        h1 { font-size: 22px; }
+        h2 { font-size: 17px; color: var(--color-accion); margin-top: 30px; }
+        p, li { color: var(--texto-secundario); font-size: 14px; }
+        .aviso {
+            background: rgba(255, 183, 3, 0.1);
+            border-left: 4px solid #ffb703;
+            padding: 12px 16px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <a href="{{ url_for('index') }}" class="volver">← Volver al analizador</a>
+        <h1>Política de Privacidad</h1>
 
+        <div class="aviso">
+            Plantilla genérica de referencia. Sustituye los datos entre corchetes por los tuyos
+            reales y, si vas a operar de forma seria (con pagos y anuncios), conviene que la
+            revise un profesional para asegurar el cumplimiento del RGPD y la LSSI-CE en España.
+        </div>
+
+        <p>Última actualización: {{ '2026' }}</p>
+
+        <h2>1. Responsable del tratamiento</h2>
+        <p>
+            [NOMBRE / RAZÓN SOCIAL], con contacto en [EMAIL DE CONTACTO], es responsable del
+            tratamiento de los datos recogidos a través de TextMind (en adelante, "la Web").
+        </p>
+
+        <h2>2. Datos que tratamos</h2>
+        <ul>
+            <li>Textos que introduces para analizar: se procesan para mostrarte el resultado y no se almacenan de forma permanente ni se comparten con terceros.</li>
+            <li>Datos de navegación anónimos a través de Google Analytics (si aceptas las cookies).</li>
+            <li>Datos de pago: si activas el Plan Premium, el pago lo gestiona Stripe directamente; nosotros no almacenamos los datos de tu tarjeta.</li>
+        </ul>
+
+        <h2>3. Finalidad</h2>
+        <p>Prestar el servicio de análisis de texto, mejorar la Web mediante estadísticas de uso, y gestionar el Plan Premium si lo contratas.</p>
+
+        <h2>4. Base legal</h2>
+        <p>Ejecución del servicio solicitado y, para Analytics, tu consentimiento explícito mediante el aviso de cookies.</p>
+
+        <h2>5. Conservación de datos</h2>
+        <p>El historial de análisis se guarda solo mientras dure tu sesión en el navegador y se elimina automáticamente después.</p>
+
+        <h2>6. Terceros</h2>
+        <p>Utilizamos Google Analytics (Google LLC) y Stripe (Stripe Inc.) como encargados del tratamiento para analítica y pagos respectivamente.</p>
+
+        <h2>7. Tus derechos</h2>
+        <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a [EMAIL DE CONTACTO].</p>
+    </div>
+</body>
+</html>
