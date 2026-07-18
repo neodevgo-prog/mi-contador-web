@@ -1,19 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q5FK3FV6S"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-1Q5FK3FV6S');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TextMind: analizador de texto inteligente con métricas de lectura, tono y SEO en tiempo real.">
     <title>TextMind 🧠 - Analizador de Texto Inteligente y Contador SEO</title>
+    <meta name="description" content="Analiza tus textos gratis: tono, tiempo de lectura, diversidad léxica, densidad de palabra clave y análisis morfológico en español.">
+    <link rel="canonical" href="{{ request.url_root }}">
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TextMind 🧠 - Analizador de Texto Inteligente">
+    <meta property="og:description" content="Analiza tono, lectura, diversidad léxica y morfología de tus textos en segundos.">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:locale" content="es_ES">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="TextMind 🧠 - Analizador de Texto Inteligente">
+    <meta name="twitter:description" content="Analiza tono, lectura, diversidad léxica y morfología de tus textos en segundos.">
+
+    <!-- Datos estructurados para buscadores -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "TextMind",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
+    }
+    </script>
+
     <style>
         :root {
             --bg-principal: #0f1219;
@@ -285,6 +304,83 @@
             border-radius: 6px;
         }
 
+        .badge-premium-activo {
+            display: inline-block;
+            background: rgba(255, 183, 3, 0.15);
+            color: var(--color-premium);
+            font-size: 13px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .site-footer {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: var(--texto-secundario);
+        }
+
+        .site-footer a {
+            color: var(--texto-secundario);
+            text-decoration: underline;
+            margin: 0 8px;
+        }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-tarjetas);
+            border-top: 1px solid var(--borde);
+            padding: 16px 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            z-index: 1000;
+        }
+
+        .cookie-banner p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--texto-secundario);
+            max-width: 600px;
+        }
+
+        .cookie-banner a {
+            color: var(--color-accion);
+        }
+
+        .cookie-botones {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cookie {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-cookie-aceptar {
+            background: var(--color-accion);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .btn-cookie-rechazar {
+            background: transparent;
+            border: 1px solid var(--borde);
+            color: var(--texto-secundario);
+        }
+
         .info-card {
             background: var(--bg-tarjetas);
             border: 1px solid var(--borde);
@@ -402,9 +498,13 @@
 
             <div class="menu-group">
                 <span class="menu-title">Suscripción</span>
+                {% if es_premium %}
+                <div class="badge-premium-activo">✅ Premium Activo</div>
+                {% else %}
                 <a href="{{ url_for('premium') }}" style="text-decoration: none;">
                     <button type="button" class="btn-panel btn-premium">⭐ Activar Plan Premium</button>
                 </a>
+                {% endif %}
             </div>
 
             <div class="menu-group">
@@ -412,8 +512,11 @@
                 <a href="{{ url_for('index') }}" style="text-decoration: none;">
                     <button type="button" class="btn-panel">📝 Nuevo Análisis / Limpiar</button>
                 </a>
-                <a href="{{ url_for('info_paginas', tipo='historial') }}" style="text-decoration: none;">
+                <a href="{{ url_for('historial') }}" style="text-decoration: none;">
                     <button type="button" class="btn-panel">📊 Historial Guardado</button>
+                </a>
+                <a href="{{ url_for('exportar_pdf') }}" style="text-decoration: none;">
+                    <button type="button" class="btn-panel">📄 Exportar PDF {% if not es_premium %}🔒{% endif %}</button>
                 </a>
             </div>
 
@@ -574,7 +677,60 @@
             </div>
         </aside>
 
+        <footer class="site-footer">
+            © {{ 2026 }} TextMind ·
+            <a href="{{ url_for('privacidad') }}">Política de Privacidad</a> ·
+            <a href="{{ url_for('cookies') }}">Política de Cookies</a>
+        </footer>
+
     </div>
+
+    <!-- Aviso de cookies (RGPD) -->
+    <div class="cookie-banner" id="cookie-banner">
+        <p>
+            Usamos cookies propias y de análisis (Google Analytics) para mejorar la web.
+            Puedes aceptarlas o rechazarlas. Más info en nuestra
+            <a href="{{ url_for('cookies') }}">Política de Cookies</a>.
+        </p>
+        <div class="cookie-botones">
+            <button class="btn-cookie btn-cookie-rechazar" id="btn-rechazar-cookies">Rechazar</button>
+            <button class="btn-cookie btn-cookie-aceptar" id="btn-aceptar-cookies">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        function cargarGoogleAnalytics() {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-1Q5FK3FV6S';
+            document.head.appendChild(script);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){ dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-1Q5FK3FV6S');
+        }
+
+        const banner = document.getElementById('cookie-banner');
+        const consentimiento = localStorage.getItem('textmind_cookies');
+
+        if (consentimiento === 'aceptado') {
+            cargarGoogleAnalytics();
+        } else if (!consentimiento) {
+            banner.style.display = 'flex';
+        }
+
+        document.getElementById('btn-aceptar-cookies').addEventListener('click', function () {
+            localStorage.setItem('textmind_cookies', 'aceptado');
+            banner.style.display = 'none';
+            cargarGoogleAnalytics();
+        });
+
+        document.getElementById('btn-rechazar-cookies').addEventListener('click', function () {
+            localStorage.setItem('textmind_cookies', 'rechazado');
+            banner.style.display = 'none';
+        });
+    </script>
 
     <script>
         const textarea = document.getElementById('texto');
